@@ -4,10 +4,22 @@ permissions:
   id-token: write
   contents: write
 
+# Publishes shiki-umd whenever the bundled shiki version changes:
+# version is synced to the exact shiki version, then built, tested,
+# tagged and published. Renovate automerges shiki updates, so new
+# shiki releases ship automatically once CI passes.
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
+    paths:
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+  workflow_dispatch:
+
+concurrency:
+  group: release
+  cancel-in-progress: false
 
 jobs:
   release:
@@ -22,10 +34,58 @@ jobs:
           node-version: lts/*
           cache: pnpm
 
-      - run: pnpm dlx changelogithub
+      - run: pnpm install --frozen-lockfile
+
+      - name: Determine versions
+        id: versions
+        run: |
+          SHIKI_VERSION=$(node -p "require('shiki/package.json').version")
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          PUBLISHED_VERSION=$(npm view "shiki-umd@${SHIKI_VERSION}" version 2>/dev/null || true)
+          {
+            echo "shiki=${SHIKI_VERSION}"
+            echo "needs_sync=$([ "$PKG_VERSION" != "$SHIKI_VERSION" ] && echo true || echo false)"
+            echo "needs_publish=$([ -z "$PUBLISHED_VERSION" ] && echo true || echo false)"
+          } >> "$GITHUB_OUTPUT"
+          echo "shiki=${SHIKI_VERSION} package=${PKG_VERSION} published=${PUBLISHED_VERSION:-no}"
+
+      - name: Build and test
+        if: steps.versions.outputs.needs_sync == 'true' || steps.versions.outputs.needs_publish == 'true'
+        run: |
+          pnpm run build
+          pnpm run test
+
+      - name: Sync version to shiki
+        if: steps.versions.outputs.needs_sync == 'true'
+        run: |
+          npm pkg set version="${{ steps.versions.outputs.shiki }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore: release v${{ steps.versions.outputs.shiki }}"
+          git pull --rebase origin main
+          git push origin main
+
+      - name: Tag
+        id: tag
+        if: steps.versions.outputs.needs_sync == 'true' || steps.versions.outputs.needs_publish == 'true'
+        run: |
+          TAG="v${{ steps.versions.outputs.shiki }}"
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "created=false" >> "$GITHUB_OUTPUT"
+          else
+            git tag "$TAG"
+            git push origin "$TAG"
+            echo "created=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish to npm
+        if: steps.versions.outputs.needs_publish == 'true'
+        run: |
+          npm install -g npm@latest
+          pnpm publish --no-git-checks
+
+      - name: Create GitHub release
+        if: steps.tag.outputs.created == 'true'
+        run: pnpm dlx changelogithub
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
-      - run: pnpm install --frozen-lockfile
-      - run: npm install -g npm@latest
-      - run: pnpm publish --no-git-checks

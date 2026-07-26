@@ -1,5 +1,16 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>ntnyq/configs//packages/renovate-config/default.json"],
-  "automerge": true
+  "automerge": true,
+  "packageRules": [
+    {
+      "description": "Ship new shiki releases immediately: standalone PR, no weekly schedule, no stability delay, automerged once CI passes. The Release workflow then publishes shiki-umd with the matching version.",
+      "matchPackageNames": ["shiki"],
+      "groupName": null,
+      "schedule": ["at any time"],
+      "minimumReleaseAge": null,
+      "prPriority": 10,
+      "automerge": true
+    }
+  ]
 }
