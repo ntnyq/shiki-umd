@@ -1,8 +1,16 @@
 {
   "name": "shiki-umd",
   "version": "0.0.0",
-  "description": "__TODO__",
-  "keywords": [],
+  "description": "Shiki syntax highlighter bundled as self-contained UMD/ESM files, for direct <script> and CDN usage",
+  "keywords": [
+    "browser",
+    "cdn",
+    "highlight",
+    "iife",
+    "shiki",
+    "syntax-highlighter",
+    "umd"
+  ],
   "homepage": "https://github.com/ntnyq/shiki-umd#readme",
   "bugs": {
     "url": "https://github.com/ntnyq/shiki-umd/issues"
@@ -20,15 +28,25 @@
     "dist"
   ],
   "type": "module",
-  "sideEffects": false,
-  "main": "./dist/index.js",
+  "sideEffects": [
+    "**/*.umd.js"
+  ],
+  "main": "./dist/index.umd.js",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "unpkg": "./dist/index.umd.js",
+  "jsdelivr": "./dist/index.umd.js",
   "exports": {
     "./package.json": "./package.json",
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    }
+    },
+    "./web": {
+      "types": "./dist/web.d.ts",
+      "default": "./dist/web.js"
+    },
+    "./dist/*": "./dist/*"
   },
   "publishConfig": {
     "access": "public"
@@ -57,6 +75,7 @@
     "npm-run-all2": "^9.0.2",
     "oxfmt": "^0.60.0",
     "oxlint": "^1.75.0",
+    "shiki": "^4.3.1",
     "tsdown": "^0.22.14",
     "vitest": "^4.1.10"
   },

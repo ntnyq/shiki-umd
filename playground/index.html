@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>shiki-umd playground</title>
+    <style>
+      body {
+        margin: 0 auto;
+        padding: 2rem 1.5rem;
+        max-width: 56rem;
+        background: #121212;
+        color: #dbd7ca;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+      }
+      h1 {
+        font-size: 1.4rem;
+      }
+      #meta {
+        margin-block: 1rem;
+        color: #858585;
+        font-size: 0.875rem;
+      }
+      pre.shiki {
+        padding: 1rem;
+        border-radius: 0.5rem;
+        overflow-x: auto;
+        font-size: 0.875rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>shiki-umd playground</h1>
+    <p id="meta">Loading…</p>
+    <div id="app"></div>
+
+    <!-- Load the UMD bundle, exposed as the `Shiki` global -->
+    <script src="../dist/index.umd.js"></script>
+    <script>
+      const samples = [
+        {
+          code: `export async function highlight(code) {\n  return Shiki.codeToHtml(code, {\n    lang: 'ts',\n    theme: 'vitesse-dark',\n  })\n}`,
+          lang: 'ts',
+          theme: 'vitesse-dark',
+        },
+        {
+          code: `fn main() {\n    println!("Hello from the full bundle!");\n}`,
+          lang: 'rust',
+          theme: 'catppuccin-mocha',
+        },
+        {
+          code: `.shiki {\n  padding: 1rem;\n  border-radius: 0.5rem;\n}`,
+          lang: 'css',
+          theme: 'nord',
+        },
+      ]
+
+      async function main() {
+        const meta = document.querySelector('#meta')
+        const app = document.querySelector('#app')
+        meta.textContent = `window.Shiki ready — ${Object.keys(Shiki.bundledLanguages).length} languages, ${Object.keys(Shiki.bundledThemes).length} themes`
+
+        for (const { code, lang, theme } of samples) {
+          const html = await Shiki.codeToHtml(code, { lang, theme })
+          const section = document.createElement('section')
+          section.innerHTML = `<p>${lang} / ${theme}</p>${html}`
+          app.append(section)
+        }
+      }
+
+      main().catch(error => {
+        document.querySelector('#meta').textContent = `Error: ${error.message}`
+      })
+    </script>
+  </body>
+</html>

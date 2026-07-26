@@ -1,10 +1,42 @@
 import { defineConfig } from 'tsdown'
+import type { UserConfig } from 'tsdown'
 
-export default defineConfig({
-  clean: true,
-  dts: {
-    tsgo: true,
-  },
-  entry: ['src/index.ts'],
-  platform: 'neutral',
-})
+const entries = {
+  index: 'src/index.ts',
+  web: 'src/web.ts',
+}
+
+/**
+ * Each entry is built on its own so every output file is fully self-contained,
+ * with shiki, its grammars, themes and the oniguruma wasm binary all inlined.
+ */
+export default defineConfig([
+  // ESM builds, single file per entry
+  ...Object.entries(entries).map(
+    ([name, entry], index): UserConfig => ({
+      clean: index === 0,
+      dts: {
+        tsgo: true,
+      },
+      entry: { [name]: entry },
+      format: 'es',
+      minify: true,
+      outputOptions: {
+        inlineDynamicImports: true,
+      },
+      platform: 'browser',
+    }),
+  ),
+  // UMD builds for direct <script> usage, exposed as the `Shiki` global
+  ...Object.entries(entries).map(
+    ([name, entry]): UserConfig => ({
+      clean: false,
+      dts: false,
+      entry: { [name]: entry },
+      format: 'umd',
+      globalName: 'Shiki',
+      minify: true,
+      platform: 'browser',
+    }),
+  ),
+])
