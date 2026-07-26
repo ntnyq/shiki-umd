@@ -15,6 +15,8 @@ export default defineConfig([
   ...Object.entries(entries).map(
     ([name, entry], index): UserConfig => ({
       clean: index === 0,
+      // Bundling everything is the point of this package
+      deps: { onlyBundle: false },
       dts: {
         tsgo: true,
       },
@@ -22,7 +24,7 @@ export default defineConfig([
       format: 'es',
       minify: true,
       outputOptions: {
-        inlineDynamicImports: true,
+        codeSplitting: false,
       },
       platform: 'browser',
     }),
@@ -31,6 +33,7 @@ export default defineConfig([
   ...Object.entries(entries).map(
     ([name, entry]): UserConfig => ({
       clean: false,
+      deps: { onlyBundle: false },
       dts: false,
       entry: { [name]: entry },
       format: 'umd',
