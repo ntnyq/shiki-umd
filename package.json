@@ -1,6 +1,6 @@
 {
   "name": "shiki-umd",
-  "version": "0.0.0",
+  "version": "4.3.1",
   "description": "Shiki syntax highlighter bundled as self-contained UMD/ESM files, for direct <script> and CDN usage",
   "keywords": [
     "browser",
