@@ -153,7 +153,6 @@ describe.skipIf(!existsSync(distDir))('generated UMD modules', () => {
       langs: [css],
       themes: [theme],
     })
-
     const html = highlighter.codeToHtml('body { color: red }', {
       lang: 'css',
       theme: 'github-light',
@@ -174,7 +173,6 @@ describe.skipIf(!existsSync(distDir))('generated UMD modules', () => {
       langs: [htmlLanguage],
       themes: [theme],
     })
-
     const html = highlighter.codeToHtml('<p>hello</p>', {
       lang: 'html',
       theme: 'vitesse-light',

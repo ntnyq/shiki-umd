@@ -15,9 +15,7 @@ export default defineConfig([
       clean: index === 0,
       // Bundling everything is the point of this package
       deps: { onlyBundle: false },
-      dts: {
-        tsgo: true,
-      },
+      dts: true,
       entry: { [name]: entry },
       format: 'es',
       minify: true,
@@ -36,35 +34,31 @@ export default defineConfig([
     return config
   }),
   // Fine-grained ESM builds and declarations, one self-contained file per entry
-  ...granularEntries.map(
-    ({ name, entry }): UserConfig => ({
-      clean: false,
-      deps: { onlyBundle: false },
-      dts: false,
-      entry: { [name]: entry },
-      format: 'es',
-      minify: true,
-      outputOptions: {
-        codeSplitting: false,
-      },
-      platform: 'browser',
-    }),
-  ),
+  ...granularEntries.map(({ name, entry }): UserConfig => ({
+    clean: false,
+    deps: { onlyBundle: false },
+    dts: false,
+    entry: { [name]: entry },
+    format: 'es',
+    minify: true,
+    outputOptions: {
+      codeSplitting: false,
+    },
+    platform: 'browser',
+  })),
   // UMD builds for direct <script> usage, with one global per entry
-  ...umdEntries.map(
-    ({ name, entry, exportMode, globalName }): UserConfig => ({
-      clean: false,
-      deps: { onlyBundle: false },
-      dts: false,
-      entry: { [name]: entry },
-      format: 'umd',
-      globalName,
-      minify: true,
-      outputOptions: {
-        codeSplitting: false,
-        exports: exportMode,
-      },
-      platform: 'browser',
-    }),
-  ),
+  ...umdEntries.map(({ name, entry, exportMode, globalName }): UserConfig => ({
+    clean: false,
+    deps: { onlyBundle: false },
+    dts: false,
+    entry: { [name]: entry },
+    format: 'umd',
+    globalName,
+    minify: true,
+    outputOptions: {
+      codeSplitting: false,
+      exports: exportMode,
+    },
+    platform: 'browser',
+  })),
 ])

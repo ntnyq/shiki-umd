@@ -58,6 +58,7 @@
     "unicorn/import-style": "off",
     "unicorn/max-nested-calls": "off",
     "curly": ["warn", "all"],
+    "one-var": ["error", "never"],
     "func-style": ["warn", "declaration", { "allowArrowFunctions": true }],
     "no-duplicate-imports": [
       "warn",
