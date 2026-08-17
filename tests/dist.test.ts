@@ -54,16 +54,16 @@ function readUmd(file: string): Promise<string> {
 }
 
 async function loadUmd<T>(file: string): Promise<T> {
-  const code = await readUmd(file)
-  const mod = { exports: {} }
+  const code = await readUmd(file),
+   mod = { exports: {} }
   // eslint-disable-next-line no-new-func
   new Function('module', 'exports', code)(mod, mod.exports)
   return mod.exports as T
 }
 
 async function loadUmdGlobal<T>(file: string, globalName: string): Promise<T> {
-  const code = await readUmd(file)
-  const globals: Record<string, unknown> = {}
+  const code = await readUmd(file),
+   globals: Record<string, unknown> = {}
   // eslint-disable-next-line no-new-func
   new Function('globalThis', code)(globals)
   return globals[globalName] as T
@@ -120,8 +120,8 @@ describe.skipIf(!existsSync(distDir))('generated UMD modules', () => {
   it.each(['index.umd.js', 'web.umd.js'])(
     '%s should work via its CommonJS factory',
     async file => {
-      const shiki = await loadUmd<ShikiBundle>(file)
-      const html = await shiki.codeToHtml('let n = 1', {
+      const shiki = await loadUmd<ShikiBundle>(file),
+       html = await shiki.codeToHtml('let n = 1', {
         lang: 'js',
         theme: 'github-light',
       })
@@ -147,14 +147,14 @@ describe.skipIf(!existsSync(distDir))('generated UMD modules', () => {
       loadUmd<EngineJavaScriptBundle>('engine-javascript.umd.js'),
       loadUmd<LanguageRegistration[]>('langs/css.umd.js'),
       loadUmd<ThemeRegistrationAny>('themes/github-light.umd.js'),
-    ])
-    const highlighter = await core.createHighlighterCore({
+    ]),
+     highlighter = await core.createHighlighterCore({
       engine: engine.createJavaScriptRegexEngine(),
       langs: [css],
       themes: [theme],
-    })
+    }),
 
-    const html = highlighter.codeToHtml('body { color: red }', {
+     html = highlighter.codeToHtml('body { color: red }', {
       lang: 'css',
       theme: 'github-light',
     })
@@ -168,14 +168,14 @@ describe.skipIf(!existsSync(distDir))('generated UMD modules', () => {
       loadUmd<EngineOnigurumaBundle>('engine-oniguruma.umd.js'),
       loadUmd<LanguageRegistration[]>('langs/html.umd.js'),
       loadUmd<ThemeRegistrationAny>('themes/vitesse-light.umd.js'),
-    ])
-    const highlighter = await core.createHighlighterCore({
+    ]),
+     highlighter = await core.createHighlighterCore({
       engine: await engine.createOnigurumaEngine(),
       langs: [htmlLanguage],
       themes: [theme],
-    })
+    }),
 
-    const html = highlighter.codeToHtml('<p>hello</p>', {
+     html = highlighter.codeToHtml('<p>hello</p>', {
       lang: 'html',
       theme: 'vitesse-light',
     })

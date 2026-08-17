@@ -16,8 +16,8 @@ export interface GranularUmdEntry extends UmdEntry {
   kind: 'language' | 'theme'
 }
 
-const projectDir = resolve(import.meta.dirname, '..')
-const shikiDistDir = dirname(fileURLToPath(import.meta.resolve('shiki')))
+const projectDir = resolve(import.meta.dirname, '..'),
+ shikiDistDir = dirname(fileURLToPath(import.meta.resolve('shiki')))
 
 export const moduleEntries = [
   {
