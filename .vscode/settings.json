@@ -10,18 +10,23 @@
   "js/ts.experimental.useTsgo": true,
   "cSpell.words": [
     "bumpp",
+    "Catppuccin",
     "changelogithub",
     "codecov",
     "esbuild",
     "lcov",
+    "nord",
     "oxfmt",
     "oxlint",
     "pnpm",
+    "shiki",
     "tsdown",
     "tsgo",
     "unrs",
+    "unrun",
     "vite",
     "vitepress",
+    "vitesse",
     "vitest"
   ],
   "cSpell.allowCompoundWords": true
