@@ -107,5 +107,5 @@
     "*.{js,ts,mjs,tsx}": "oxlint --fix --no-error-on-unmatched-pattern",
     "*": "oxfmt --no-error-on-unmatched-pattern"
   },
-  "packageManager": "pnpm@12.3.4"
+  "packageManager": "pnpm@12.4.1"
 }
