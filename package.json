@@ -95,10 +95,10 @@
     "@types/node": "^26.6.5",
     "husky": "^9.1.7",
     "nano-staged": "^1.0.2",
-    "oxfmt": "^0.73.0",
-    "oxlint": "^1.88.0",
+    "oxfmt": "^0.74.0",
+    "oxlint": "^1.89.0",
     "shiki": "4.5.0",
-    "tsdown": "^0.23.1",
+    "tsdown": "^0.23.2",
     "typescript": "^7.0.2",
     "unrun": "^0.3.1",
     "vitest": "^5.0.5"
@@ -107,5 +107,5 @@
     "*.{js,ts,mjs,tsx}": "oxlint --fix --no-error-on-unmatched-pattern",
     "*": "oxfmt --no-error-on-unmatched-pattern"
   },
-  "packageManager": "pnpm@12.14.0"
+  "packageManager": "pnpm@12.15.0"
 }
